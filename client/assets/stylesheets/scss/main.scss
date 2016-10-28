@@ -1,0 +1,78 @@
+// Abstract: much of this implementation for css is based on the principles of
+// css architecture based on http://philipwalton.com/articles/css-architecture/ and http://nicolasgallagher.com/about-html-semantics-front-end-architecture/
+// also takes inspiration on smacss for the folder structure https://smacss.com/ and object oriented css OOCSS, http://www.smashingmagazine.com/2011/12/an-introduction-to-object-oriented-css-oocss/
+// and several other sources, http://www.smashingmagazine.com/2013/10/challenging-css-best-practices-atomic-approach/,
+// http://codeguide.co/, https://github.com/necolas/idiomatic-css, http://cssguidelin.es/, http://bradfrost.com/blog/post/atomic-web-design/
+// we strongly recommend the BEM selectors naming convention -> http://www.smashingmagazine.com/2014/07/bem-methodology-for-small-projects/, https://en.bem.info/
+// looking into the future: http://acss.io/, http://patternlab.io/, https://github.com/css-modules/css-modules
+
+//shared styles if available, use the same order as the layout ones
+
+//layuot files
+
+//settings and colors
+@import "settings/colors";
+@import "settings/variables";
+@import "core/functions";
+
+//mixins
+@import "mixins/buttons";
+@import "mixins/box-sizing";
+@import "mixins/user-select";
+@import "mixins/box-shadow";
+@import "mixins/clearfix";
+@import "mixins/font-size";
+@import "mixins/tab-focus";
+@import "mixins/em";
+@import "mixins/forms";
+@import "mixins/opacity";
+@import "mixins/rem";
+@import "mixins/transitions";
+@import "mixins/gradients";
+@import "mixins/transform";
+
+//Vendor
+// use this area as vendor overwrite area, use other files for actual vendor filesm it is an extra http request, but keep sanity high
+//@import "vendor/jquery-ui";
+
+//core styles
+//use placeholders for extends only, always be care with placeholders -> http://csswizardry.com/2014/11/when-to-use-extend-when-to-use-a-mixin/
+@import "core/placeholders";
+@import "core/core";
+@import "core/fonts";
+@import "core/font-icons";
+@import "core/typography";
+@import "core/layout";
+@import "core/grid";
+@import "core/lists";
+
+//objects, use them directly in the html
+@import "objects/nav";
+@import "objects/media";
+@import "objects/vertical-middle";
+@import "objects/clearfix";
+
+//modules, the real css that you write everyday based on the design
+// @import "modules/grid";
+@import "modules/lists";
+// @import "modules/logo";
+@import "modules/forms";
+@import "modules/buttons-base";
+@import "modules/buttons";
+@import "modules/button-group";
+@import "modules/main-header";
+@import "modules/main-navigation";
+@import "modules/main-footer";
+@import "modules/sticky-footer";
+@import "modules/round-icons";
+@import "modules/login";
+@import "modules/navbar";
+@import "modules/video";
+@import "modules/star";
+
+// Helpers
+@import "helpers/helpers";
+@import "helpers/text-helpers";
+@import "helpers/visibility-helpers";
+@import "helpers/float-helpers";
+@import "helpers/spacing-helpers";

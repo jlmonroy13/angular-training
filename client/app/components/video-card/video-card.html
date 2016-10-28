@@ -1,0 +1,6 @@
+<div class="video-card">
+  <h2 class="video-card__title"><a href="#">{{vm.video.name}}</a></h2>
+  <video class="video-card__player" src="{{vm.video.url}}" controls></video>
+  <star-rating ratings="vm.video.ratings"></star-rating>
+  <p class="video-card__description">{{vm.video.description | characters: 200: false}}</p>
+</div>

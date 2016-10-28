@@ -1,0 +1,21 @@
+.login {
+  @include gradient-directional($watermelon 0%, $purple 100%, 135deg);
+  min-height: 100vh;
+  padding-top: $base-spacing-unit*3;
+  &-box {
+    @include gradient-directional(#35394A 0%, #1F222E 100%, 45deg);
+    padding: $base-spacing-unit*3 0;
+    &__title {
+      @include rem(30);
+      color: #FFF;
+      margin-bottom: $base-spacing-unit*2;
+      margin-left: $base-spacing-unit*3;
+    }
+    &__error-message {
+      color: $pink;
+      margin: $half-spacing-unit 0;
+      position: absolute;
+      top: 100%;
+    }
+  }
+}

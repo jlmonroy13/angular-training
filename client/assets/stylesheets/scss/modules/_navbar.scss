@@ -1,0 +1,13 @@
+.navbar {
+  @include rem(18);
+  float: $end;
+  line-height: $base-spacing-unit*2;
+  &__text {
+    border-right: 1px solid #FFF;
+    padding-right: $half-spacing-unit;
+    margin-right: $half-spacing-unit;
+  }
+  &__link {
+    cursor: pointer;
+  }
+}

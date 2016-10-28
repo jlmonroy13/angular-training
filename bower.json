@@ -1,0 +1,25 @@
+{
+  "name": "video-portal",
+  "authors": [
+    "Selvio Perez <selvio89@hotmail.com>"
+  ],
+  "description": "",
+  "main": "index.html",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-route": "^1.5.8",
+    "angular-resource": "^1.5.8",
+    "cryptojslib": "^3.1.2",
+    "ngstorage": "^0.3.11",
+    "angular-ui-router": "^0.3.1"
+  }
+}

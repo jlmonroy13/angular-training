@@ -1,0 +1,17 @@
+.star {
+  &-list {
+    list-style: none;
+    margin: 0;
+    &__item {
+      @include rem(22);
+      color: $gray-lighter;
+      display: inline-block;
+      list-style-type: none;
+      margin-right: $half-spacing-unit/2;
+      text-shadow: .03em .03em $gray-light;
+      &.is-filled {
+        color: $yellow;
+      }
+    }
+  }
+}

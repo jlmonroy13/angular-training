@@ -1,0 +1,65 @@
+.video {
+  padding-top: $base-spacing-unit*5;
+  &-card {
+    @include box-shadow(0 2px 4px rgba(0,0,0,.1));
+    @include transition('0.3s');
+    background-color: #FFF;
+    margin-bottom: $base-spacing-unit;
+    min-height: 420px;
+    padding: $half-spacing-unit;
+    &__title {
+      @include rem(18);
+      font-weight: 700;
+      text-align: center;
+      min-height: 45px;
+      a {
+        color: $color-brand;
+        &:hover {
+          color: $pink;
+        }
+      }
+    }
+    &__player {
+      min-height: 150px;
+      width: 99%;
+    }
+    &__description {
+      @include rem(14);
+      margin-bottom: 0;
+    }
+  }
+  &-detail {
+    display: inline-block;
+    height: calc(100vh - 66px);
+    margin-top: 66px;
+    padding: $base-spacing-unit*2 $base-spacing-unit*2 0;
+    text-align: center;
+    width: 100%;
+    @media #{$medium} {
+      width: calc(100vw - 300px);
+    }
+    &__title {
+      @include rem(30);
+      margin-top: 0;
+    }
+    &__player {
+      margin-bottom: $base-spacing-unit;
+      max-width: 600px;
+      width: 100%;
+    }
+  }
+  &__sidebar {
+    display: none;
+    height: calc(100vh - 66px);
+    overflow-y: auto;
+    padding: $base-spacing-unit $half-spacing-unit 0;
+    position: fixed;
+    right: 0;
+    top: 66px;
+    width: 300px;
+    background-color: $gray-lighter;
+    @media #{$medium} {
+      display: block;
+    }
+  }
+}

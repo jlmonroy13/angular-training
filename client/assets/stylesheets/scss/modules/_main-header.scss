@@ -1,0 +1,17 @@
+.main-header{
+	position: fixed;
+  left: 0;
+  right: 0;
+  @include gradient-directional($watermelon  0%, $purple 100%, 135deg);
+  @include box-shadow(0 1px 3px 0 rgba(0,0,0,.1));
+  padding: $half-spacing-unit $base-spacing-unit;
+  color: #FFF;
+  z-index: 99;
+  &__logo {
+    display: inline-block;
+    margin: 0;
+    a {
+      color: #FFF;
+    }
+  }
+}
