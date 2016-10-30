@@ -25,7 +25,7 @@
                 username: vm.username
               }
               sessionFactory.setCurrentUser(user);
-              $location.path('dashboard');
+              $location.path('dashboard/videos');
             } else {
               vm.errorMessage = response.error;
             }

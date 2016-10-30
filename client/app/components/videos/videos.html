@@ -1,6 +1,6 @@
 <section class="video">
   <h1 class="sr-only">Videos</h1>
-  <div class="container">
+  <div class="container" infinite-scroll="videosCtrl.getMoreVideos()" infinite-scroll-distance="2">
     <div class="grid">
       <div class="grid__item small--one-half medium--one-quarter" ng-repeat="video in videosCtrl.videos">
         <video-card video="video"></video-card>

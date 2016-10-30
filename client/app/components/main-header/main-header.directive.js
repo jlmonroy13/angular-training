@@ -23,6 +23,11 @@
     var vm = this;
     vm.user = $localStorage.user;
     vm.logout = sessionFactory.logout;
+    vm.goVideos = goVideos;
+
+    function goVideos() {
+      $location.path('/dashboard/videos');
+    }
 
   }
 

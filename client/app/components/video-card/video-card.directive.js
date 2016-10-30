@@ -19,9 +19,17 @@
 
   }
 
-  videoCardController.$inject = [];
+  videoCardController.$inject = ['$location', 'videosService', '$rootScope'];
 
-  function videoCardController() {
-    
+  function videoCardController($location, videosService, $rootScope) {
+
+    var vm = this;
+    vm.selectVideo = selectVideo;
+
+    function selectVideo(video) {
+      videosService.setSelectedVideo(video);
+      $rootScope.$emit('selectVideo');
+      $location.path('/dashboard/video-detail');
+    }
   }
 }());

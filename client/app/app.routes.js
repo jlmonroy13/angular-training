@@ -12,13 +12,13 @@
           url: '/',
           templateUrl: 'app/components/login/login.html',
           controller: 'loginController',
-          controllerAs: 'loginCtrl'
+          controllerAs: 'loginCtrl',
         })
         .state('dashboard', {
           url: '/dashboard',
           templateUrl: 'app/components/dashboard/dashboard.html',
           controller: 'dashboardController',
-          controllerAs: 'dashboardCtrl'
+          controllerAs: 'dashboardCtrl',
         }) 
         .state('videos', {
           url: '/videos',
@@ -26,6 +26,13 @@
           controller: 'videosController',
           controllerAs: 'videosCtrl',
           parent: 'dashboard'
+        })  
+        .state('video-detail', {
+          url: '/video-detail',
+          templateUrl: 'app/components/video-detail/video-detail.html',
+          controller: 'videoDetailController',
+          controllerAs: 'videoDetailCtrl',
+          parent: 'dashboard',
         }) 
     }
 })();

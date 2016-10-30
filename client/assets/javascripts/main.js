@@ -1,4 +1,4 @@
-angular.module('video-portal', ['ui.router', 'ngResource', 'ngStorage']);
+angular.module('video-portal', ['ui.router', 'ngResource', 'ngStorage', 'ngAnimate', 'infinite-scroll']);
 
 (function() {
   angular
@@ -14,13 +14,13 @@ angular.module('video-portal', ['ui.router', 'ngResource', 'ngStorage']);
           url: '/',
           templateUrl: 'app/components/login/login.html',
           controller: 'loginController',
-          controllerAs: 'loginCtrl'
+          controllerAs: 'loginCtrl',
         })
         .state('dashboard', {
           url: '/dashboard',
           templateUrl: 'app/components/dashboard/dashboard.html',
           controller: 'dashboardController',
-          controllerAs: 'dashboardCtrl'
+          controllerAs: 'dashboardCtrl',
         }) 
         .state('videos', {
           url: '/videos',
@@ -28,6 +28,13 @@ angular.module('video-portal', ['ui.router', 'ngResource', 'ngStorage']);
           controller: 'videosController',
           controllerAs: 'videosCtrl',
           parent: 'dashboard'
+        })  
+        .state('video-detail', {
+          url: '/video-detail',
+          templateUrl: 'app/components/video-detail/video-detail.html',
+          controller: 'videoDetailController',
+          controllerAs: 'videoDetailCtrl',
+          parent: 'dashboard',
         }) 
     }
 })();
@@ -37,52 +44,18 @@ angular.module('video-portal', ['ui.router', 'ngResource', 'ngStorage']);
     .module('video-portal')
     .controller('dashboardController', dashboardController);
 
-    dashboardController.$inject = ['sessionFactory', '$location', '$localStorage', 'Videos', 'Login'];
+    dashboardController.$inject = ['$location', '$localStorage', '$state'];
 
-    function dashboardController(sessionFactory, $location, $localStorage, Videos, Login) {
-
-      if ($localStorage.user) {
-        activate();
-      } else {
-        $location.path('/');
-      } 
+    function dashboardController($location, $localStorage, $state) {
 
       var vm = this;
-      vm.videos = [];
 
-      function getSessionId() {
-        var sessionId;
-        if (sessionFactory.getCurrentUser()) {
-          sessionId = sessionFactory.getCurrentUser().sessionId;
-          fetchVideos(sessionId);
-        } 
-        var data = {
-          username: $localStorage.user.username,
-          password: $localStorage.user.password
-        }
-        Login.save(data).$promise
-          .then( response => {
-            sessionId = response.sessionId;
-            fetchVideos(sessionId);
-          })
-          .catch( response => {
-            vm.errorMessage = response.data.error;
-          });
+      if ($localStorage.user) {
+        $location.path('/dashboard/videos');
+      } else {
+        $location.path('/');
       }
-
-      function fetchVideos(sessionId) {
-        Videos.get({sessionId: sessionId}).$promise
-          .then(response => {
-            vm.videos = response.data;
-          })
-          .catch( error => {
-            console.log(error);
-          });
-      }
-
-      function activate() {
-        getSessionId();
-      }
+      
     }
 })(); 
 
@@ -113,7 +86,7 @@ angular.module('video-portal', ['ui.router', 'ngResource', 'ngStorage']);
                 username: vm.username
               }
               sessionFactory.setCurrentUser(user);
-              $location.path('dashboard');
+              $location.path('dashboard/videos');
             } else {
               vm.errorMessage = response.error;
             }
@@ -163,6 +136,11 @@ angular.module('video-portal', ['ui.router', 'ngResource', 'ngStorage']);
     var vm = this;
     vm.user = $localStorage.user;
     vm.logout = sessionFactory.logout;
+    vm.goVideos = goVideos;
+
+    function goVideos() {
+      $location.path('/dashboard/videos');
+    }
 
   }
 
@@ -174,14 +152,14 @@ angular.module('video-portal', ['ui.router', 'ngResource', 'ngStorage']);
     .module('video-portal')
     .factory('sessionFactory', sessionFactory)
 
-    sessionFactory.$inject = ['$location', '$localStorage'];
+    sessionFactory.$inject = ['$location', '$localStorage', 'Login'];
 
-    function sessionFactory($location, $localStorage) {
+    function sessionFactory($location, $localStorage, Login) {
 
       var currentUser;
 
       var factory = {
-        getCurrentUser,
+        getSessionId,
         logout,
         setCurrentUser
       }
@@ -190,14 +168,23 @@ angular.module('video-portal', ['ui.router', 'ngResource', 'ngStorage']);
         currentUser = user;
       }
 
-      function getCurrentUser() {
-        return currentUser;
-      }
-
       function logout() {
         $localStorage.user = null;
         $location.path('/');
         currentUser = null;
+      }
+
+      function getSessionId() {
+        var sessionId;
+        if (currentUser) {
+          return  currentUser.sessionId;
+        } else {
+          var data = {
+            username: $localStorage.user.username,
+            password: $localStorage.user.password
+          } 
+          return Login.save(data).$promise
+        }
       }
 
       return factory;
@@ -215,7 +202,8 @@ angular.module('video-portal', ['ui.router', 'ngResource', 'ngStorage']);
       templateUrl: '../../app/components/star-rating/star-rating.html',
       controller: starRatingController,
       scope: {
-        ratings: '='
+        video: '=',
+        readOnly: '='
       },
       controllerAs: 'vm',
       bindToController: true
@@ -225,28 +213,89 @@ angular.module('video-portal', ['ui.router', 'ngResource', 'ngStorage']);
 
   }
 
-  starRatingController.$inject = [];
+  starRatingController.$inject = ['StartRating', 'sessionFactory'];
 
-  function starRatingController() {
+  function starRatingController(StartRating, sessionFactory) {
 
-    var vm = this;
-    vm.average = getAverage(vm.ratings);
+    var vm = this,
+        savingInProgress = false;
+    vm.stars = [];
+    vm.selectRating = selectRating;
     
     function getAverage(array) {
       return Math.round((array.reduce((a,b) => {return a +b}))/array.length);
     }
-    function generateStarsArray() {
-      var average = getAverage(vm.ratings);
-      vm.stars = [];
-      var filled;
-      for (var i = 5; i >= 0; i--) {
-        filled = i <= average ? true : false;
-        vm.stars.unshift({filled:  filled})
+
+    function fillStars(rating, readOnly) {
+      for (var i = 4; i >= 0; i--) {
+        vm.stars[i] = {
+          filled: i <= rating - 1 && readOnly,
+          rating: i + 1
+        };
       }
     }
+
+    function generateStarsArray() {
+      var average = getAverage(vm.video.ratings);
+      fillStars(average, vm.readOnly); 
+    }
+
+    function selectRating(rating) {
+      if (!vm.readOnly) {
+        var response = sessionFactory.getSessionId();
+        if (typeof response == 'string') {
+          saveRate(rating, response);
+        } else {
+          if (!savingInProgress) {
+            savingInProgress = true;
+            response
+              .then( response => {
+                var user = {sessionId: response.sessionId}
+                sessionFactory.setCurrentUser(user);
+                saveRate(rating, response.sessionId);
+              })
+              .catch( error => {
+                console.log(error);
+                savingInProgress = false;
+              });
+          }
+        }
+      }
+    }
+
+    function saveRate(rating, sessionId) {
+      var data = {
+          videoId: vm.video._id,
+          rating: rating
+        } 
+      StartRating.save({sessionId: sessionId}, data).$promise
+        .then( response => {
+          vm.readOnly = true;
+          fillStars(rating, vm.readOnly);
+          savingInProgress = false;
+        })
+        .catch( error => {
+          console.log(error);
+          savingInProgress = false;
+        });
+    }
+
     generateStarsArray();
   }
 }());
+
+(function () {  
+  'user strict'
+  angular
+    .module('video-portal')
+    .factory('StartRating', StartRating)
+
+    StartRating.$inject = ['$resource'];
+
+    function StartRating($resource) {
+      return $resource("/video/ratings", {sessionId:'@sessionId'});
+    }
+})();
 
 (function() {
   angular
@@ -269,21 +318,68 @@ angular.module('video-portal', ['ui.router', 'ngResource', 'ngStorage']);
 
   }
 
-  videoCardController.$inject = [];
+  videoCardController.$inject = ['$location', 'videosService', '$rootScope'];
 
-  function videoCardController() {
-    
+  function videoCardController($location, videosService, $rootScope) {
+
+    var vm = this;
+    vm.selectVideo = selectVideo;
+
+    function selectVideo(video) {
+      videosService.setSelectedVideo(video);
+      $rootScope.$emit('selectVideo');
+      $location.path('/dashboard/video-detail');
+    }
   }
 }());
 
 (function() {
   angular
     .module('video-portal')
+    .controller('videoDetailController', videoDetailController);
+
+    videoDetailController.$inject = ['$location', '$localStorage', 'videosService', '$rootScope'];
+
+    function videoDetailController($location, $localStorage, videosService, $rootScope) {
+
+      var vm = this;
+      vm.videos = [];
+
+      if ($localStorage.user) {
+        activate();
+      } else {
+        $location.path('/');
+      }
+
+      function getSelectedVideo() {
+        vm.video = videosService.getSelectedVideo();
+      }
+
+      function activate() {
+        vm.videos = videosService.getVideos();
+        getSelectedVideo();
+      }
+
+      $rootScope.$on('selectVideo', () => {
+        getSelectedVideo();
+      });
+
+    }
+})(); 
+
+(function() {
+  angular
+    .module('video-portal')
     .controller('videosController', videosController);
 
-    videosController.$inject = ['sessionFactory', '$location', '$localStorage', 'Videos', 'Login'];
+    videosController.$inject = ['sessionFactory', '$location', '$localStorage', 'videosService', 'Login'];
 
-    function videosController(sessionFactory, $location, $localStorage, Videos, Login) {
+    function videosController(sessionFactory, $location, $localStorage, videosService, Login) {
+
+      var vm = this,
+          fetchingInProgress = false;
+      vm.videos = [];
+      vm.getMoreVideos = getMoreVideos;
 
       if ($localStorage.user) {
         activate();
@@ -291,42 +387,50 @@ angular.module('video-portal', ['ui.router', 'ngResource', 'ngStorage']);
         $location.path('/');
       } 
 
-      var vm = this;
-
-      vm.videos = [];
-
-      function getSessionId() {
-        var sessionId;
-        if (sessionFactory.getCurrentUser()) {
-          sessionId = sessionFactory.getCurrentUser().sessionId;
-          fetchVideos(sessionId);
-        } 
-        var data = {
-          username: $localStorage.user.username,
-          password: $localStorage.user.password
-        }
-        Login.save(data).$promise
-          .then( response => {
-            sessionId = response.sessionId;
-            fetchVideos(sessionId);
-          })
-          .catch( response => {
-            vm.errorMessage = response.data.error;
-          });
+      function getMoreVideos(){
+        getSessionId(true);
       }
 
-      function fetchVideos(sessionId) {
-        Videos.get({sessionId: sessionId}).$promise
-          .then(response => {
-            vm.videos = response.data;
-          })
-          .catch( error => {
-            console.log(error);
-          });
+      function getSessionId(getMoreVideos) {
+        var response = sessionFactory.getSessionId();
+        if (typeof response == 'string') {
+          getVideos(sessionFactory.getSessionId());
+        } else {
+          if (!fetchingInProgress) {
+            fetchingInProgress = true;
+            response
+              .then( response => {
+                var user = {sessionId: response.sessionId}
+                sessionFactory.setCurrentUser(user);
+                getVideos(response.sessionId, getMoreVideos);
+              })
+              .catch( error => {
+                console.log(error);
+                fetchingInProgress = false;
+              });
+          }
+        }
+      }
+
+      function getVideos(sessionId, getMoreVideos) {
+        var response = videosService.getVideos(sessionId, getMoreVideos);
+        if (Array.isArray(response)) {
+          vm.videos = response;
+        } else {
+          response
+            .then(response => {
+              vm.videos = vm.videos.concat(response.data.data);
+              fetchingInProgress = false;
+            })
+            .catch( error => {
+              console.log(error);
+              fetchingInProgress = false;
+            });
+        }
       }
 
       function activate() {
-        getSessionId();
+        getSessionId(false);
       }
     }
     
@@ -336,12 +440,56 @@ angular.module('video-portal', ['ui.router', 'ngResource', 'ngStorage']);
   'user strict'
   angular
     .module('video-portal')
-    .factory('Videos', Videos)
+    .factory('videosService', videosService)
 
-    Videos.$inject = ['$resource'];
+    videosService.$inject = ['$http', '$localStorage'];
 
-    function Videos($resource) {
-      return $resource("/videos");
+    function videosService($http, $localStorage) {
+      var factory = {
+        getVideos,
+        setSelectedVideo,
+        getSelectedVideo
+      }
+
+      var videos = [],
+          skip   = 0,
+          limit  = 10;
+
+      function fetchVideos(sessionId) {
+        var req = {
+          method: 'GET',
+          url: `/videos?sessionId=${sessionId}`,
+          params: {
+            skip: skip,
+            limit: limit
+          }
+        }
+        var promise = $http(req);
+        promise
+          .then( response => {
+            videos = videos.concat(response.data.data);
+            skip += limit;
+          })
+          .catch( error => {
+            console.log(error);
+          });
+        return promise
+      }
+
+      function getVideos(sessionId, getMoreVideos) {
+        if (!videos.length || getMoreVideos) return fetchVideos(sessionId);
+        return videos;
+      }
+
+      function setSelectedVideo(video) {
+        $localStorage.selectedVideo = video;
+      }
+
+      function getSelectedVideo() {
+        return $localStorage.selectedVideo;
+      }
+
+      return factory;
     }
 })();
 

@@ -9,14 +9,12 @@
     padding: $half-spacing-unit;
     &__title {
       @include rem(18);
+      cursor: pointer;
       font-weight: 700;
-      text-align: center;
       min-height: 45px;
-      a {
-        color: $color-brand;
-        &:hover {
-          color: $pink;
-        }
+      text-align: center;
+      &:hover {
+        color: $pink;
       }
     }
     &__player {
@@ -32,6 +30,7 @@
     display: inline-block;
     height: calc(100vh - 66px);
     margin-top: 66px;
+    overflow-y: auto;
     padding: $base-spacing-unit*2 $base-spacing-unit*2 0;
     text-align: center;
     width: 100%;
@@ -49,15 +48,15 @@
     }
   }
   &__sidebar {
+    background-color: $gray-lighter;
     display: none;
     height: calc(100vh - 66px);
     overflow-y: auto;
     padding: $base-spacing-unit $half-spacing-unit 0;
-    position: fixed;
+    position: absolute;
     right: 0;
     top: 66px;
     width: 300px;
-    background-color: $gray-lighter;
     @media #{$medium} {
       display: block;
     }

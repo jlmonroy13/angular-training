@@ -31,10 +31,6 @@
 @import "mixins/gradients";
 @import "mixins/transform";
 
-//Vendor
-// use this area as vendor overwrite area, use other files for actual vendor filesm it is an extra http request, but keep sanity high
-//@import "vendor/jquery-ui";
-
 //core styles
 //use placeholders for extends only, always be care with placeholders -> http://csswizardry.com/2014/11/when-to-use-extend-when-to-use-a-mixin/
 @import "core/placeholders";
@@ -69,6 +65,8 @@
 @import "modules/navbar";
 @import "modules/video";
 @import "modules/star";
+@import "modules/animations";
+@import "modules/tooltip";
 
 // Helpers
 @import "helpers/helpers";

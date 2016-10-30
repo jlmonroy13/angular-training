@@ -23,6 +23,7 @@
 .button--danger {
   @include button-style($btn-danger-color, $btn-danger-bg, $btn-danger-border);
 }
+
 .button--submit {
   display: block;
   color: $pink;
@@ -33,6 +34,21 @@
   text-align: center;
   padding: $half-spacing-unit $half-spacing-unit*5;
   margin-left: $base-spacing-unit*3;
+  &:hover {
+    background-color: $pink;
+    color: #FFF;
+  }
+}
+
+.button--tooltip {
+  display: block;
+  color: $pink;
+  background-color: transparent;
+  text-transform: uppercase;
+  border: 2px solid $pink;
+  border-radius: 100px;
+  text-align: center;
+  padding: $half-spacing-unit/4 $half-spacing-unit*3;
   &:hover {
     background-color: $pink;
     color: #FFF;

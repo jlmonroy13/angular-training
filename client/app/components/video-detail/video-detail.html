@@ -1,0 +1,19 @@
+<section class="video-detail">
+  <h1 class="video-detail__title">{{videoDetailCtrl.video.name}}</h1>
+  <video class="video-detail__player" ng-src="{{videoDetailCtrl.video.url}}" controls></video>
+  <div class="text--start">
+  <div class="push-half--bottom">
+    <star-rating video="videoDetailCtrl.video" read-only="true" class="display-inline-block"></star-rating>
+    <div class="tooltip float--end">
+      <span class="button button--tooltip">Rate</span>
+      <div class="tooltip__content">
+        <star-rating video="videoDetailCtrl.video" read-only="false" class="display-inline-block"></star-rating>
+      </div>
+    </div>
+  </div>
+    <p>{{videoDetailCtrl.video.description}}</p>
+  </div>
+</section>
+<aside class="video__sidebar">
+  <video-card video="video" ng-repeat="video in videoDetailCtrl.videos"></video-card>
+</aside>

@@ -18,6 +18,8 @@ var options = {
       'bower_components/angular/angular.js',
       'bower_components/angular-ui-router/release/angular-ui-router.js',
       'bower_components/angular-resource/angular-resource.js',
+      'bower_components/angular-animate/angular-animate.js',
+      'bower_components/ng-infinite-scroll-npm-is-better-than-bower/build/ng-infinite-scroll.js',
       'bower_components/ngstorage/ngStorage.js',
       'bower_components/cryptojslib/rollups/md5.js'
     ],

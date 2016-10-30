@@ -1,5 +1,5 @@
 <ul class="star-list">
-  <li ng-repeat="star in vm.stars" class="star-list__item" ng-class="{'is-filled': star.filled}">
+  <li ng-repeat="star in vm.stars" class="star-list__item" ng-class="{'is-filled': star.filled, 'read-only': vm.readOnly}" ng-click="vm.selectRating(star.rating)">
     <span class="icon icon__star"></span>
   </li>
 </ul>

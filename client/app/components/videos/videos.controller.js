@@ -3,9 +3,14 @@
     .module('video-portal')
     .controller('videosController', videosController);
 
-    videosController.$inject = ['sessionFactory', '$location', '$localStorage', 'Videos', 'Login'];
+    videosController.$inject = ['sessionFactory', '$location', '$localStorage', 'videosService', 'Login'];
 
-    function videosController(sessionFactory, $location, $localStorage, Videos, Login) {
+    function videosController(sessionFactory, $location, $localStorage, videosService, Login) {
+
+      var vm = this,
+          fetchingInProgress = false;
+      vm.videos = [];
+      vm.getMoreVideos = getMoreVideos;
 
       if ($localStorage.user) {
         activate();
@@ -13,42 +18,50 @@
         $location.path('/');
       } 
 
-      var vm = this;
-
-      vm.videos = [];
-
-      function getSessionId() {
-        var sessionId;
-        if (sessionFactory.getCurrentUser()) {
-          sessionId = sessionFactory.getCurrentUser().sessionId;
-          fetchVideos(sessionId);
-        } 
-        var data = {
-          username: $localStorage.user.username,
-          password: $localStorage.user.password
-        }
-        Login.save(data).$promise
-          .then( response => {
-            sessionId = response.sessionId;
-            fetchVideos(sessionId);
-          })
-          .catch( response => {
-            vm.errorMessage = response.data.error;
-          });
+      function getMoreVideos(){
+        getSessionId(true);
       }
 
-      function fetchVideos(sessionId) {
-        Videos.get({sessionId: sessionId}).$promise
-          .then(response => {
-            vm.videos = response.data;
-          })
-          .catch( error => {
-            console.log(error);
-          });
+      function getSessionId(getMoreVideos) {
+        var response = sessionFactory.getSessionId();
+        if (typeof response == 'string') {
+          getVideos(sessionFactory.getSessionId());
+        } else {
+          if (!fetchingInProgress) {
+            fetchingInProgress = true;
+            response
+              .then( response => {
+                var user = {sessionId: response.sessionId}
+                sessionFactory.setCurrentUser(user);
+                getVideos(response.sessionId, getMoreVideos);
+              })
+              .catch( error => {
+                console.log(error);
+                fetchingInProgress = false;
+              });
+          }
+        }
+      }
+
+      function getVideos(sessionId, getMoreVideos) {
+        var response = videosService.getVideos(sessionId, getMoreVideos);
+        if (Array.isArray(response)) {
+          vm.videos = response;
+        } else {
+          response
+            .then(response => {
+              vm.videos = vm.videos.concat(response.data.data);
+              fetchingInProgress = false;
+            })
+            .catch( error => {
+              console.log(error);
+              fetchingInProgress = false;
+            });
+        }
       }
 
       function activate() {
-        getSessionId();
+        getSessionId(false);
       }
     }
     
