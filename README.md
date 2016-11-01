@@ -15,4 +15,11 @@ App where users can login, see video listenings, navigate to a single video, rat
 
 - Run test: `gulp test`
 
+If you dont have gulp installed, you can install it with this command `npm install -g gulp`
 
+## Credentials
+
+User credentials to log in to the  app
+
+- Username: 'ali'
+- Password: 'password'
