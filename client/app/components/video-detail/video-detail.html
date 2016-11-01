@@ -14,6 +14,8 @@
     <p>{{videoDetailCtrl.video.description}}</p>
   </div>
 </section>
-<aside class="video__sidebar">
-  <video-card video="video" ng-repeat="video in videoDetailCtrl.videos"></video-card>
+<aside class="video-sidebar">
+  <div infinite-scroll="videoDetailCtrl.getVideos(true)" infinite-scroll-distance="2">
+    <video-card video="video" ng-repeat="video in videoDetailCtrl.videos"></video-card>
+  </div>
 </aside>

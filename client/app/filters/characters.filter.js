@@ -1,4 +1,5 @@
 (function () {
+  // this filter truncate text depending of numbers of chars selected
   angular
     .module('video-portal')
     .filter('characters', function () {

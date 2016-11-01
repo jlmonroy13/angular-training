@@ -26,10 +26,12 @@
     var vm = this;
     vm.selectVideo = selectVideo;
 
+    // Redirect to video-detail page a set the selected video through the videosService
     function selectVideo(video) {
       videosService.setSelectedVideo(video);
       $rootScope.$emit('selectVideo');
       $location.path('/dashboard/video-detail');
     }
+
   }
 }());

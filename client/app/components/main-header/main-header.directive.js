@@ -25,6 +25,7 @@
     vm.logout = sessionFactory.logout;
     vm.goVideos = goVideos;
 
+    // This function redirect user to videos page is "Video Portal" title is clicked
     function goVideos() {
       $location.path('/dashboard/videos');
     }

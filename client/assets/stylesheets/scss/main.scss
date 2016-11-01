@@ -6,8 +6,6 @@
 // we strongly recommend the BEM selectors naming convention -> http://www.smashingmagazine.com/2014/07/bem-methodology-for-small-projects/, https://en.bem.info/
 // looking into the future: http://acss.io/, http://patternlab.io/, https://github.com/css-modules/css-modules
 
-//shared styles if available, use the same order as the layout ones
-
 //layuot files
 
 //settings and colors
@@ -32,7 +30,6 @@
 @import "mixins/transform";
 
 //core styles
-//use placeholders for extends only, always be care with placeholders -> http://csswizardry.com/2014/11/when-to-use-extend-when-to-use-a-mixin/
 @import "core/placeholders";
 @import "core/core";
 @import "core/fonts";
@@ -40,32 +37,19 @@
 @import "core/typography";
 @import "core/layout";
 @import "core/grid";
-@import "core/lists";
-
-//objects, use them directly in the html
-@import "objects/nav";
-@import "objects/media";
-@import "objects/vertical-middle";
-@import "objects/clearfix";
 
 //modules, the real css that you write everyday based on the design
 // @import "modules/grid";
 @import "modules/lists";
-// @import "modules/logo";
 @import "modules/forms";
 @import "modules/buttons-base";
 @import "modules/buttons";
-@import "modules/button-group";
 @import "modules/main-header";
 @import "modules/main-navigation";
-@import "modules/main-footer";
-@import "modules/sticky-footer";
-@import "modules/round-icons";
 @import "modules/login";
 @import "modules/navbar";
 @import "modules/video";
 @import "modules/star";
-@import "modules/animations";
 @import "modules/tooltip";
 
 // Helpers

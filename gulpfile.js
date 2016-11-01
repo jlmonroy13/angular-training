@@ -1,6 +1,7 @@
-var gulp    = require('gulp'),
-    concat  = require('gulp-concat'),
-    sass    = require('gulp-sass');
+var gulp   = require('gulp'),
+    concat = require('gulp-concat'),
+    sass   = require('gulp-sass'),
+    Server = require('karma').Server;
 
 var options = {
   default : {
@@ -19,6 +20,7 @@ var options = {
       'bower_components/angular-ui-router/release/angular-ui-router.js',
       'bower_components/angular-resource/angular-resource.js',
       'bower_components/angular-animate/angular-animate.js',
+      'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/ng-infinite-scroll-npm-is-better-than-bower/build/ng-infinite-scroll.js',
       'bower_components/ngstorage/ngStorage.js',
       'bower_components/cryptojslib/rollups/md5.js'
@@ -30,8 +32,10 @@ var options = {
     files: [ 
       'client/app/app.module.js',
       'client/app/app.routes.js',
-      'client/app/components/**/*.js',
-      'client/app/filters/*.js' 
+      'client/app/components/**/*.controller.js',
+      'client/app/components/**/*.service.js',
+      'client/app/components/**/*.directive.js',
+      'client/app/filters/*.filter.js' 
     ],
     destination : 'client/assets/javascripts',
     fileName: 'main.js'
@@ -63,4 +67,11 @@ gulp.task('scripts', function() {
   return gulp.src(options.scripts.files)
     .pipe(concat(options.scripts.fileName))
     .pipe(gulp.dest(options.scripts.destination));
+});
+
+gulp.task('test', function (done) {
+  new Server({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done).start();
 });

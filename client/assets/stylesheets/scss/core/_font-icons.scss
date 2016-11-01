@@ -1,97 +1,37 @@
-.icon-lg {
-  font-size: (4em / 3);
-  line-height: (3em / 4);
-  vertical-align: -15%;
+@font-face {
+  font-family: 'icon-family';
+  src:  url('../fonts/icon-family/icon-family.eot?1woy3r');
+  src:  url('../fonts/icon-family/icon-family.eot?1woy3r#iefix') format('embedded-opentype'),
+    url('../fonts/icon-family/icon-family.woff2?1woy3r') format('woff2'),
+    url('../fonts/icon-family/icon-family.ttf?1woy3r') format('truetype'),
+    url('../fonts/icon-family/icon-family.woff?1woy3r') format('woff'),
+    url('../fonts/icon-family/icon-family.svg?1woy3r#icon-family') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
-.icon-2x { font-size: 2em; }
-.icon-3x { font-size: 3em; }
-.icon-4x { font-size: 4em; }
-.icon-5x { font-size: 5em; }
 
-[class^="icon-"], [class*=" icon-"] {
-  font-family: $font-family-icons;
+[class^="icon__"], [class*=" icon__"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: $font-family-icons !important;
   speak: none;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-  display: inline-block;
 
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-chat:before {
-  content: "\e617";
+.icon__star:before {
+  content: "\e902";
 }
-.icon-antena:before {
-  content: "\e601";
+.icon__lock-outline:before {
+  content: "\e900";
 }
-.icon-arrow-down:before {
-  content: "\e602";
+.icon__perm-identity:before {
+  content: "\e901";
 }
-.icon-arrow-left:before {
-  content: "\e603";
-}
-.icon-arrow-right:before {
-  content: "\e604";
-}
-.icon-arrow-up:before {
-  content: "\e605";
-}
-.icon-check:before {
-  content: "\e606";
-}
-.icon-clip:before {
-  content: "\e607";
-}
-.icon-clock:before {
-  content: "\e608";
-}
-.icon-close-alt:before {
-  content: "\e609";
-}
-.icon-close:before {
-  content: "\e60a";
-}
-.icon-cog:before {
-  content: "\e60b";
-}
-.icon-edit:before {
-  content: "\e60c";
-}
-.icon-ellipsis:before {
-  content: "\e60d";
-}
-.icon-envelope:before {
-  content: "\e60e";
-}
-.icon-glass:before {
-  content: "\e60f";
-}
-.icon-link:before {
-  content: "\e610";
-}
-.icon-pencil:before {
-  content: "\e611";
-}
-.icon-question:before {
-  content: "\e612";
-}
-.icon-tag:before {
-  content: "\e613";
-}
-.icon-thumbs-down:before {
-  content: "\e614";
-}
-.icon-thumbs-up:before {
-  content: "\e615";
-}
-.icon-two:before {
-  content: "\e616";
-}
-.icon-person:before {
-  content: "\e600";
-}
+

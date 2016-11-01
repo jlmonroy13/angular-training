@@ -10,30 +10,23 @@
       var vm = this,
           fetchingInProgress = false;
       vm.videos = [];
-      vm.getMoreVideos = getMoreVideos;
+      vm.getVideos = getVideos;
 
-      if ($localStorage.user) {
-        activate();
-      } else {
-        $location.path('/');
-      } 
+      activate();
 
-      function getMoreVideos(){
-        getSessionId(true);
-      }
-
-      function getSessionId(getMoreVideos) {
-        var response = sessionFactory.getSessionId();
-        if (typeof response == 'string') {
-          getVideos(sessionFactory.getSessionId());
-        } else {
-          if (!fetchingInProgress) {
-            fetchingInProgress = true;
+      // get the videos to be display in the view making a request to videos service, this function is also use to load more videos when user scrolls down
+      function getVideos(getMoreVideos) {
+        if (!fetchingInProgress) {
+          fetchingInProgress = true;
+          var response = videosService.getVideos(getMoreVideos);
+          if (Array.isArray(response)) {
+            vm.videos = response;
+            fetchingInProgress = false;
+          } else {
             response
-              .then( response => {
-                var user = {sessionId: response.sessionId}
-                sessionFactory.setCurrentUser(user);
-                getVideos(response.sessionId, getMoreVideos);
+              .then(response => {
+                vm.videos = vm.videos.concat(response.data.data);
+                fetchingInProgress = false;
               })
               .catch( error => {
                 console.log(error);
@@ -43,25 +36,9 @@
         }
       }
 
-      function getVideos(sessionId, getMoreVideos) {
-        var response = videosService.getVideos(sessionId, getMoreVideos);
-        if (Array.isArray(response)) {
-          vm.videos = response;
-        } else {
-          response
-            .then(response => {
-              vm.videos = vm.videos.concat(response.data.data);
-              fetchingInProgress = false;
-            })
-            .catch( error => {
-              console.log(error);
-              fetchingInProgress = false;
-            });
-        }
-      }
-
+      // this function is executed when the controller init and call getVideos
       function activate() {
-        getSessionId(false);
+        getVideos(false);
       }
     }
     

@@ -9,11 +9,8 @@
 
       var vm = this;
 
-      if ($localStorage.user) {
-        $location.path('/dashboard/videos');
-      } else {
-        $location.path('/');
-      }
+      // Redirect to login page if no user is logged
+      if (!$localStorage.user) $location.path('/');
       
     }
 })(); 

@@ -1,2 +1,18 @@
-# Angular Training
+## Video Portal
+
+App where users can login, see video listenings, navigate to a single video, rate videos and can perform all media related task e.g. Play, Adjust volume and seek video position.
+
+## Installation
+
+- Install bower dependencies: `bower install`
+- Install node dependecies: `npm install`
+
+## Run
+
+- Start server `npm start`
+
+## Tests
+
+- Run test: `gulp test`
+
 
